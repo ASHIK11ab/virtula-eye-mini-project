@@ -82,6 +82,7 @@ class Detector:
       if success:
         bbox = self.createBoundingBox(frame, maxObjects, iou_threshold, confidenceThreshold)
         cv2.imshow("Result", bbox)
+        cv2.waitKey(10)
       else:
         break
     video.release()
