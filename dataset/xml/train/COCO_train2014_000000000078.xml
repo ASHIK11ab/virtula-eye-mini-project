@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train2014</folder>
+	<filename>COCO_train2014_000000000078.jpg</filename>
+	<path>C:\Users\ASHIK\Downloads\dataset\train2014\COCO_train2014_000000000078.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>612</width>
+		<height>612</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>clock</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>346</xmin>
+			<ymin>3</ymin>
+			<xmax>585</xmax>
+			<ymax>234</ymax>
+		</bndbox>
+	</object>
+</annotation>
