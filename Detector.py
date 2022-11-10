@@ -1,6 +1,7 @@
 import cv2, os, tensorflow as tf
 import numpy as np
 from tensorflow.python.keras.utils.data_utils import get_file
+from Util import object_in_walk_frame
 
 np.random.seed(123)
 
@@ -51,6 +52,10 @@ class Detector:
 
     imH, imW, imC = image.shape
 
+    mid = imW // 2
+    leftLineX = mid - 200
+    rightLineX = mid + 200
+
     # Filter detected objects and cancel noise
     bboxIds = tf.image.non_max_suppression(bboxs, classScores, max_output_size=maxObjects, iou_threshold=iou_threshold, score_threshold=confidenceThreshold)
 
@@ -67,8 +72,19 @@ class Detector:
 
         ymin, xmin, ymax, xmax = box
         xmin, xmax, ymin, ymax = int(xmin * imW), int(xmax * imW), int(ymin * imH), int(ymax * imH)
-        cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=classColor, thickness=2)
-        cv2.putText(image, displayText, (xmin, ymin - 10), cv2.FONT_HERSHEY_PLAIN, 1, color=classColor, thickness=2)
+        
+        print(xmin, ymin, xmax, ymax)
+        print(leftLineX, rightLineX)
+
+        # left line
+        cv2.line(image, (leftLineX, 0), (leftLineX, imH), (255, 0, 0), thickness=2)
+        # right line
+        cv2.line(image, (rightLineX, 0), (rightLineX, imH), (255, 0, 0), thickness=2)
+        
+        # ignore objects which are not in walk frame.
+        if object_in_walk_frame(leftLineX, rightLineX, (xmin, ymin), (xmax, ymax)):
+          cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=classColor, thickness=2)
+          cv2.putText(image, displayText, (xmin, ymin - 10), cv2.FONT_HERSHEY_PLAIN, 1, color=classColor, thickness=2)
     
     return image
 
