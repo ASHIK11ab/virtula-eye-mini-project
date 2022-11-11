@@ -41,6 +41,21 @@ class Detector:
 
 
   def createBoundingBox(self, image, maxObjects, iou_threshold, confidenceThreshold):
+    imH, imW, imC = image.shape
+    mid = imW // 2
+
+    if imW > 400:
+      leftLineX = mid - 200
+      rightLineX = mid + 200
+    else:
+      leftLineX = 10
+      rightLineX = imW - 10
+
+    # left line
+    cv2.line(image, (leftLineX, 0), (leftLineX, imH), (255, 0, 0), thickness=2)
+    # right line
+    cv2.line(image, (rightLineX, 0), (rightLineX, imH), (255, 0, 0), thickness=2)
+    
     inputTensor = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     inputTensor = tf.convert_to_tensor(inputTensor, dtype=tf.uint8)
     inputTensor = inputTensor[tf.newaxis, ...]
@@ -49,12 +64,6 @@ class Detector:
     bboxs = detections['detection_boxes'][0].numpy()
     classIndexes = detections['detection_classes'][0].numpy().astype(np.int32)
     classScores = detections['detection_scores'][0].numpy()
-
-    imH, imW, imC = image.shape
-
-    mid = imW // 2
-    leftLineX = mid - 200
-    rightLineX = mid + 200
 
     # Filter detected objects and cancel noise
     bboxIds = tf.image.non_max_suppression(bboxs, classScores, max_output_size=maxObjects, iou_threshold=iou_threshold, score_threshold=confidenceThreshold)
@@ -75,14 +84,9 @@ class Detector:
         
         print(xmin, ymin, xmax, ymax)
         print(leftLineX, rightLineX)
-
-        # left line
-        cv2.line(image, (leftLineX, 0), (leftLineX, imH), (255, 0, 0), thickness=2)
-        # right line
-        cv2.line(image, (rightLineX, 0), (rightLineX, imH), (255, 0, 0), thickness=2)
         
         # ignore objects which are not in walk frame.
-        if object_in_walk_frame(leftLineX, rightLineX, (xmin, ymin), (xmax, ymax)):
+        if object_in_walk_frame(leftLineX, rightLineX, mid, (xmin, ymin), (xmax, ymax)):
           cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=classColor, thickness=2)
           cv2.putText(image, displayText, (xmin, ymin - 10), cv2.FONT_HERSHEY_PLAIN, 1, color=classColor, thickness=2)
     
