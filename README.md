@@ -6,6 +6,7 @@
   > pip install numpy
   > pip install opencv-python
   > pip install tensorflow==2.10.0
+  > pip install playsound==1.2.2
 ```
 - After installing dependencies, run
 ```sh

@@ -2,6 +2,7 @@ import cv2, os, tensorflow as tf
 import numpy as np
 from tensorflow.python.keras.utils.data_utils import get_file
 from Util import object_in_walk_frame
+from playsound import playsound
 
 np.random.seed(123)
 
@@ -89,7 +90,8 @@ class Detector:
         if object_in_walk_frame(leftLineX, rightLineX, mid, (xmin, ymin), (xmax, ymax)):
           cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=classColor, thickness=2)
           cv2.putText(image, displayText, (xmin, ymin - 10), cv2.FONT_HERSHEY_PLAIN, 1, color=classColor, thickness=2)
-    
+          playsound('alert.mp3', False)
+
     return image
 
 
